@@ -43,16 +43,9 @@ public class TestActivity : AppCompatActivity() {
     }
 
     public  fun getDeviceIMEI(): String? {
-        var deviceUniqueIdentifier: String? = null
-        val tm = this.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        if (null != tm) {
-            deviceUniqueIdentifier = tm.deviceId
-        }
-        if (null == deviceUniqueIdentifier || 0 == deviceUniqueIdentifier.length) {
-            deviceUniqueIdentifier =
-                Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
-        }
-        return deviceUniqueIdentifier
+        val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        println(telephonyManager.deviceId.toString());
+        return telephonyManager.deviceId.toString();
     }
 
 

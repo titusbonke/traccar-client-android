@@ -1,6 +1,8 @@
 package org.traccar.client
 
+import android.content.Context
 import android.os.Build
+import android.telephony.TelephonyManager
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
@@ -18,5 +20,7 @@ class RequestManagerTest {
     fun testSendRequest() {
         Assert.assertTrue(sendRequest("http://www.google.com"))
     }
+
+
 
 }

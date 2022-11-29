@@ -44,6 +44,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.getSystemService
 import androidx.preference.EditTextPreference
 import androidx.preference.EditTextPreferenceDialogFragmentCompat
 import androidx.preference.Preference
@@ -225,7 +226,12 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
         if (!sharedPreferences.contains(KEY_DEVICE)) {
 //            val id = (Random().nextInt(900000) + 100000).toString()
 
-            val id = (activity as TestActivity).getDeviceIMEI().toString();
+            val telephonyManager = getActivity()?.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            println(telephonyManager.deviceId.toString());
+
+
+
+            val id = telephonyManager.deviceId.toString();
             sharedPreferences.edit().putString(KEY_DEVICE, id).apply()
             findPreference<EditTextPreference>(KEY_DEVICE)?.text = id
         }
