@@ -21,6 +21,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
+import android.content.Context.TELEPHONY_SERVICE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
@@ -28,6 +29,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.text.InputType
 import android.util.Log
 import android.view.Menu
@@ -38,7 +40,9 @@ import android.webkit.URLUtil
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.preference.EditTextPreference
 import androidx.preference.EditTextPreferenceDialogFragmentCompat
 import androidx.preference.Preference
@@ -216,12 +220,24 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
     private fun initPreferences() {
         PreferenceManager.setDefaultValues(requireActivity(), R.xml.preferences, false)
         if (!sharedPreferences.contains(KEY_DEVICE)) {
-            val id = (Random().nextInt(900000) + 100000).toString()
+//            val id = (Random().nextInt(900000) + 100000).toString()
+            val id = telephonyService();
             sharedPreferences.edit().putString(KEY_DEVICE, id).apply()
             findPreference<EditTextPreference>(KEY_DEVICE)?.text = id
         }
         findPreference<Preference>(KEY_DEVICE)?.summary = sharedPreferences.getString(KEY_DEVICE, null)
     }
+    public fun telephonyService(): String {
+        val telephonyManager = requireActivity().getSystemService(AppCompatActivity.TELEPHONY_SERVICE) as TelephonyManager
+        val imei = if (android.os.Build.VERSION.SDK_INT >= 26) {
+
+            telephonyManager.imei
+        } else {
+            telephonyManager.deviceId
+        }
+        return imei.toString()
+    }
+
 
     private fun showBackgroundLocationDialog(context: Context, onSuccess: () -> Unit) {
         val builder = AlertDialog.Builder(context)

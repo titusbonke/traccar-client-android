@@ -29,11 +29,16 @@
         android:title="@string/settings_accuracy_title" />
 
     <EditTextPreference
-        android:defaultValue="300"
-        android:key="interval"
+        android:defaultValue="30"
         android:inputType="number"
+        android:key="interval"
         android:summary="@string/settings_interval_summary"
-        android:title="@string/settings_interval_title" />
+        android:title="@string/settings_interval_title"
+        android:focusable="false"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:enabled="false"
+        />
 
     <EditTextPreference
         android:defaultValue="0"
