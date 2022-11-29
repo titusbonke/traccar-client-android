@@ -19,6 +19,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.app.PendingIntent.getActivity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Context.TELEPHONY_SERVICE
@@ -49,9 +50,11 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.TwoStatePreference
+import com.google.android.material.internal.ContextUtils.getActivity
 import dev.doubledot.doki.ui.DokiActivity
 import java.util.*
 import kotlin.collections.HashSet
+
 
 class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
 
@@ -221,21 +224,12 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
         PreferenceManager.setDefaultValues(requireActivity(), R.xml.preferences, false)
         if (!sharedPreferences.contains(KEY_DEVICE)) {
 //            val id = (Random().nextInt(900000) + 100000).toString()
-            val id = telephonyService();
+
+            val id = (activity as TestActivity).getDeviceIMEI().toString();
             sharedPreferences.edit().putString(KEY_DEVICE, id).apply()
             findPreference<EditTextPreference>(KEY_DEVICE)?.text = id
         }
         findPreference<Preference>(KEY_DEVICE)?.summary = sharedPreferences.getString(KEY_DEVICE, null)
-    }
-    public fun telephonyService(): String {
-        val telephonyManager = requireActivity().getSystemService(AppCompatActivity.TELEPHONY_SERVICE) as TelephonyManager
-        val imei = if (android.os.Build.VERSION.SDK_INT >= 26) {
-
-            telephonyManager.imei
-        } else {
-            telephonyManager.deviceId
-        }
-        return imei.toString()
     }
 
 
