@@ -12,7 +12,9 @@
 
     <EditTextPreference
         android:key="id"
-        android:title="@string/settings_id_title" />
+        android:title="@string/settings_id_title"
+        android:enabled="false"
+        />
 
     <EditTextPreference
         android:defaultValue="@string/settings_url_default_value"

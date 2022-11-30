@@ -30,6 +30,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.text.InputType
 import android.util.Log
@@ -72,6 +73,8 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
         setHasOptionsMenu(true)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         setPreferencesFromResource(R.xml.preferences, rootKey)
+
+
         initPreferences()
 
         findPreference<Preference>(KEY_DEVICE)?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
@@ -114,6 +117,27 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
             startTrackingService(checkPermission = true, initialPermission = false)
         }
     }
+    fun getDeviceId(context: Context): String? {
+        val deviceId: String
+        deviceId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        } else {
+            val mTelephony = context.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
+            if (mTelephony.deviceId != null) {
+                mTelephony.deviceId
+            } else {
+                Settings.Secure.getString(
+                    context.contentResolver,
+                    Settings.Secure.ANDROID_ID
+                )
+            }
+        }
+        return deviceId
+    }
+
 
     class NumericEditTextPreferenceDialogFragment : EditTextPreferenceDialogFragmentCompat() {
 
@@ -182,9 +206,9 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
     }
 
     private fun setPreferencesEnabled(enabled: Boolean) {
-        findPreference<Preference>(KEY_DEVICE)?.isEnabled = enabled
+//        findPreference<Preference>(KEY_DEVICE)?.isEnabled = enabled
         findPreference<Preference>(KEY_URL)?.isEnabled = enabled
-        findPreference<Preference>(KEY_INTERVAL)?.isEnabled = enabled
+//        findPreference<Preference>(KEY_INTERVAL)?.isEnabled = enabled
         findPreference<Preference>(KEY_DISTANCE)?.isEnabled = enabled
         findPreference<Preference>(KEY_ANGLE)?.isEnabled = enabled
         findPreference<Preference>(KEY_ACCURACY)?.isEnabled = enabled
@@ -225,13 +249,7 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
         PreferenceManager.setDefaultValues(requireActivity(), R.xml.preferences, false)
         if (!sharedPreferences.contains(KEY_DEVICE)) {
 //            val id = (Random().nextInt(900000) + 100000).toString()
-
-            val telephonyManager = getActivity()?.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            println(telephonyManager.deviceId.toString());
-
-
-
-            val id = telephonyManager.deviceId.toString();
+            val id = getDeviceId(requireContext());
             sharedPreferences.edit().putString(KEY_DEVICE, id).apply()
             findPreference<EditTextPreference>(KEY_DEVICE)?.text = id
         }
