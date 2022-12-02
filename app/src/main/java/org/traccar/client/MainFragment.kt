@@ -19,12 +19,8 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.app.PendingIntent.getActivity
-import android.content.ComponentName
-import android.content.Context
+import android.content.*
 import android.content.Context.TELEPHONY_SERVICE
-import android.content.Intent
-import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -42,20 +38,11 @@ import android.webkit.URLUtil
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
-import androidx.preference.EditTextPreference
-import androidx.preference.EditTextPreferenceDialogFragmentCompat
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
-import androidx.preference.TwoStatePreference
-import com.google.android.material.internal.ContextUtils.getActivity
+import androidx.preference.*
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import dev.doubledot.doki.ui.DokiActivity
 import java.util.*
-import kotlin.collections.HashSet
 
 
 class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
@@ -77,15 +64,22 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
 
         initPreferences()
 
-        findPreference<Preference>(KEY_DEVICE)?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            newValue != null && newValue != ""
-        }
+//        findPreference<Preference>(KEY_DEVICE)?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+//            newValue != null && newValue != ""
+//        }
         findPreference<Preference>(KEY_URL)?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             newValue != null && validateServerURL(newValue.toString())
         }
         findPreference<Preference>(KEY_INTERVAL)?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             try {
-                newValue != null && (newValue as String).toInt() > 0
+                if((newValue as String).toInt()<10){
+//                    sharedPreferences.edit().putString(KEY_INTERVAL, 10.toString()).apply();
+                    Toast.makeText(context,"Frequency can't be set below 10 seconds", Toast.LENGTH_LONG).show()
+                    false
+                }else{
+                    newValue != null && (newValue as String).toInt() > 0
+                }
+
             } catch (e: NumberFormatException) {
                 Log.w(TAG, e)
                 false
@@ -99,8 +93,23 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
                 false
             }
         }
+        val copyToClipBoard = Preference.OnPreferenceClickListener { _ ->
+            try {
+                val textToCopy = sharedPreferences.getString(KEY_DEVICE, null)
+                val clipboardManager =requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clipData = ClipData.newPlainText("text", textToCopy)
+                clipboardManager.setPrimaryClip(clipData)
+                Toast.makeText(context,"Device Id copied to clipboard", Toast.LENGTH_LONG).show()
+                true
+            } catch (e: NumberFormatException) {
+                Log.w(TAG, e)
+                false
+            }
+        }
+
         findPreference<Preference>(KEY_DISTANCE)?.onPreferenceChangeListener = numberValidationListener
         findPreference<Preference>(KEY_ANGLE)?.onPreferenceChangeListener = numberValidationListener
+        findPreference<Preference>(KEY_DEVICE)?.onPreferenceClickListener = copyToClipBoard
 
         alarmManager = requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val originalIntent = Intent(activity, AutostartReceiver::class.java)
@@ -116,6 +125,7 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
         if (sharedPreferences.getBoolean(KEY_STATUS, false)) {
             startTrackingService(checkPermission = true, initialPermission = false)
         }
+
     }
     fun getDeviceId(context: Context): String? {
         val deviceId: String
@@ -206,9 +216,9 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
     }
 
     private fun setPreferencesEnabled(enabled: Boolean) {
-//        findPreference<Preference>(KEY_DEVICE)?.isEnabled = enabled
+        findPreference<Preference>(KEY_DEVICE)?.isEnabled = enabled
         findPreference<Preference>(KEY_URL)?.isEnabled = enabled
-//        findPreference<Preference>(KEY_INTERVAL)?.isEnabled = enabled
+        findPreference<Preference>(KEY_INTERVAL)?.isEnabled = enabled
         findPreference<Preference>(KEY_DISTANCE)?.isEnabled = enabled
         findPreference<Preference>(KEY_ANGLE)?.isEnabled = enabled
         findPreference<Preference>(KEY_ACCURACY)?.isEnabled = enabled
@@ -224,10 +234,13 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
                 stopTrackingService()
             }
             (requireActivity().application as MainApplication).handleRatingFlow(requireActivity())
-        } else if (key == KEY_DEVICE) {
+        }
+        else if (key == KEY_DEVICE) {
             findPreference<Preference>(KEY_DEVICE)?.summary = sharedPreferences.getString(KEY_DEVICE, null)
         }
+
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main, menu)
@@ -251,7 +264,8 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
 //            val id = (Random().nextInt(900000) + 100000).toString()
             val id = getDeviceId(requireContext());
             sharedPreferences.edit().putString(KEY_DEVICE, id).apply()
-            findPreference<EditTextPreference>(KEY_DEVICE)?.text = id
+            findPreference<Preference>(KEY_DEVICE)?.summary = id
+
         }
         findPreference<Preference>(KEY_DEVICE)?.summary = sharedPreferences.getString(KEY_DEVICE, null)
     }
@@ -344,6 +358,8 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
         Toast.makeText(activity, R.string.error_msg_invalid_url, Toast.LENGTH_LONG).show()
         return false
     }
+
+
 
     companion object {
         private val TAG = MainFragment::class.java.simpleName

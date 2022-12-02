@@ -10,17 +10,18 @@
         android:switchTextOn="@string/settings_status_on"
         android:title="@string/settings_status_title" />
 
-    <EditTextPreference
+    <Preference
         android:key="id"
         android:title="@string/settings_id_title"
-        android:enabled="false"
-        />
+        >
+    </Preference>
 
     <EditTextPreference
         android:defaultValue="@string/settings_url_default_value"
         android:key="url"
         android:summary="@string/settings_url_summary"
         android:title="@string/settings_url_title" />
+
 
     <ListPreference
         android:defaultValue="medium"
@@ -36,10 +37,6 @@
         android:key="interval"
         android:summary="@string/settings_interval_summary"
         android:title="@string/settings_interval_title"
-        android:focusable="false"
-        android:clickable="false"
-        android:cursorVisible="false"
-        android:enabled="false"
         />
 
     <EditTextPreference
