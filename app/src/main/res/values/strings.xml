@@ -27,7 +27,7 @@
     <string name="settings_wakelock_off_summary">Wake lock off</string>
     <string name="settings_wakelock_on_summary">Wake lock on</string>
     <string name="settings_accuracy_title">Location accuracy</string>
-    <string name="settings_accuracy_summary">Desired location accuracy - High</string>
+    <string name="settings_accuracy_summary">Desired location accuracy</string>
     <string name="settings_accuracy_high">High</string>
     <string name="settings_accuracy_medium">Medium</string>
     <string name="settings_accuracy_low">Low</string>
