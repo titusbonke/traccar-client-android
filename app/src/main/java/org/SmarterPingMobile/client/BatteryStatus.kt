@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 - 2021 Anton Tananaev (anton@SmarterPingMobile.org)
+ * Copyright 2022 Anton Tananaev (anton@SmarterPingMobile.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.traccar.client
+package org.SmarterPingMobile.client
 
-import android.content.Context
-import org.traccar.client.PositionProvider.PositionListener
-
-object PositionProviderFactory {
-
-    fun create(context: Context, listener: PositionListener): PositionProvider {
-        return GooglePositionProvider(context, listener)
-    }
-}
+data class BatteryStatus(
+    val level: Double = 0.0,
+    val charging: Boolean = false,
+)

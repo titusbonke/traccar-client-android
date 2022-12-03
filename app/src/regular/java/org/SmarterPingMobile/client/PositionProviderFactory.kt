@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.traccar.client
+package org.SmarterPingMobile.client
 
 import android.content.Context
-import org.traccar.client.PositionProvider.PositionListener
+import org.SmarterPingMobile.client.PositionProvider.PositionListener
 
 object PositionProviderFactory {
 
     fun create(context: Context, listener: PositionListener): PositionProvider {
-        return GooglePositionProvider(context, listener)
+        return AndroidPositionProvider(context, listener)
     }
 }
