@@ -24,12 +24,14 @@
 
 
     <ListPreference
-        android:defaultValue="medium"
+        android:defaultValue="high"
         android:entries="@array/settings_accuracy_names"
         android:entryValues="@array/settings_accuracy_values"
         android:key="accuracy"
         android:summary="@string/settings_accuracy_summary"
-        android:title="@string/settings_accuracy_title" />
+        android:title="@string/settings_accuracy_title"
+        android:enabled="false"
+        />
 
     <EditTextPreference
         android:defaultValue="30"
