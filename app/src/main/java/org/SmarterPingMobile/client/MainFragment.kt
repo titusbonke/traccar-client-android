@@ -75,10 +75,6 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
 //                    sharedPreferences.edit().putString(KEY_INTERVAL, 10.toString()).apply();
                     Toast.makeText(context,"Frequency can't be set below 10 seconds", Toast.LENGTH_LONG).show()
                     false
-                }else if((newValue as String).toInt()>600){
-//                    sharedPreferences.edit().putString(KEY_INTERVAL, 10.toString()).apply();
-                    Toast.makeText(context,"Frequency can't be set more than 600 seconds", Toast.LENGTH_LONG).show()
-                    false
                 }else{
                     newValue != null && (newValue as String).toInt() > 0
                 }
@@ -224,7 +220,7 @@ class MainFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListene
         findPreference<Preference>(KEY_INTERVAL)?.isEnabled = enabled
         findPreference<Preference>(KEY_DISTANCE)?.isEnabled = enabled
         findPreference<Preference>(KEY_ANGLE)?.isEnabled = enabled
-//        findPreference<Preference>(KEY_ACCURACY)?.isEnabled = enabled
+        findPreference<Preference>(KEY_ACCURACY)?.isEnabled = enabled
         findPreference<Preference>(KEY_BUFFER)?.isEnabled = enabled
         findPreference<Preference>(KEY_WAKELOCK)?.isEnabled = enabled
     }
