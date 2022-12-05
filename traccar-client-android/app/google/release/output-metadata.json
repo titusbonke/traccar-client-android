@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "org.traccar.client",
+  "variantName": "googleRelease",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 79,
+      "versionName": "6.18",
+      "outputFile": "app-google-release.apk"
+    }
+  ],
+  "elementType": "File"
+}
