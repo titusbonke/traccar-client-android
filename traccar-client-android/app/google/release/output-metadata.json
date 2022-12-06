@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "org.traccar.client",
+  "applicationId": "org.smarterpingmobile.client",
   "variantName": "googleRelease",
   "elements": [
     {

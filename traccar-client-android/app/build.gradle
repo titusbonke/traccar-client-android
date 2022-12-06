@@ -5,15 +5,15 @@ android {
     compileSdkVersion 33
 
     defaultConfig {
-        applicationId 'org.traccar.client'
+        applicationId 'org.smarterpingmobile.client'
         buildConfigField 'boolean', 'HIDDEN_APP', 'false'
         minSdkVersion 16
         targetSdkVersion 33
-        versionCode 79
-        versionName '6.18'
+        versionCode 80
+        versionName '22.12.1'
         multiDexEnabled true
     }
-    namespace 'org.traccar.client'
+    namespace 'org.smarterpingmobile.client'
 
     packagingOptions {
         resources {
@@ -28,7 +28,7 @@ android {
         }
         google
         hidden {
-            applicationId 'org.traccar.client.hidden'
+            applicationId 'org.smarterpingmobile.client.hidden'
             buildConfigField 'boolean', 'HIDDEN_APP', 'true'
         }
     }
@@ -85,8 +85,8 @@ if (getGradle().getStartParameter().getTaskRequests().toString().contains('Googl
     task copyJson(type: Copy) {
         from '../../environment/google-services'
         into '.'
-        include 'traccar-client-android.json'
-        rename('traccar-client-android.json', 'google-services.json')
+        include 'smarterpingmobile-client-android.json'
+        rename('smarterpingmobile-client-android.json', 'google-services.json')
     }
 
     afterEvaluate {
